@@ -1,16 +1,17 @@
 package ai;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-
+/**
+ *
+ * @author Lea
+ */
 public class Astar {
     
-    public ArrayList<Position> getPath(SokobanState state, Position start, Position end){
+    public ArrayList<Position> getPath(State state, Position start, Position end){
 
-        Node start_node = new Node(null, start); //on fait un noeud avec la position de depart "la boîte"
-        Node end_node = new Node(null, end);    // on fait un noeud avec la position du fin "le but"
+        Node start_node = new Node(null, start);   //on fait un noeud avec la position de depart "la boîte"
+        Node end_node   = new Node(null, end);    // on fait un noeud avec la position du fin "le but"
 
         ArrayList<Node> open_list = new ArrayList<>();
         ArrayList<Node> closed_list = new ArrayList<>();
@@ -50,7 +51,7 @@ public class Astar {
             neighbours.add(new Position(current_node.getPosition().getX(),current_node.getPosition().getY()-1));
             
             for(Position new_position: neighbours){
-                if (state.play(new Move(current_node.getPosition(),new_position))!= null){//on verifie si la position de mouvement dans la cas est valid
+                if (state.play(current_node.getPosition(),new_position)){//on verifie si la position de mouvement dans la cas est valid
                     Node new_node = new Node(current_node, new_position);
                     children.add(new_node);                         //on ajoute dans un ArrayList tous les enfants(cas suivant) possible de noeud actuel
                 }
@@ -84,27 +85,24 @@ public class Astar {
       return null; //s'il n'existe pas un chemin
     }
     
-    public ArrayList<Position> playAI(SokobanState state){
+    public ArrayList<Position> playAI(State state){
         Position start = null;
         Position end = null;
-        for(int i = 0; i <= state.getGrid().getN(); i++){ //on cherche la position final
-            for(int j = 0; j <= state.getGrid().getM(); j++){
-                if(state.getGrid()[i][j]==CaseG.GOAL){
+        for(int i = 0; i <= state.getSize()[0]; i++){ //on cherche la position final
+            for(int j = 0; j <= state.getSize()[1]; j++){
+                if(state.getMatrix()[i][j] == State.GOAL){// CHECK
                     end = new Position(i,j); //on prend la première position du but
                     break;
                 }
             }
         }
         
-        for(Box box: state.getBoxes()){
-            start = box.getPosition(); //on prend la première position de la premiere boite 
-            break;
-        }
+        start = state.getPositionGoal(); //on prend la première position de la premiere boite 
         
         ArrayList<Position> pathBox =  getPath(state, start, end);
         ArrayList<Position> pathPlayer = null;
         
-        Position position_player = state.getPlayer().getPosition();
+        Position position_player = state.getPositionPlayer();
         
         //on veut trouver la direction dans laquelle la boîte ira afin que nous puissions positionner notre joueur là 
         if(pathBox.get(0).getX() > start.getX()){ // premier deplacement pour la boite est a droite
@@ -117,7 +115,8 @@ public class Astar {
             pathPlayer =  getPath(state, position_player, new Position(start.getX(), start.getY()+1));
         }
         
-        ArrayList<Position> fullPath = mergeLists(pathPlayer, pathBox.remove(pathBox.size()));
+        pathBox.remove(pathBox.size());
+        ArrayList<Position> fullPath = mergeLists(pathPlayer, pathBox);
         return fullPath;
     }
     

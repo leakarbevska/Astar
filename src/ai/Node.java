@@ -7,7 +7,7 @@ package ai;
 
 /**
  *
- * @author Leya
+ * @author Lea
  */
 public class Node {
     private Node parent;
