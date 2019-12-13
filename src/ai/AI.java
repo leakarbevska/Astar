@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 /**
  * 
- * @author Lea
+ * @author lea
  */
 public class AI {
 
@@ -29,23 +29,26 @@ public class AI {
         int y_player = sc.nextInt();
         Position position_player = new Position(x_player, y_player);
         
+        System.out.println("Give the position of the box");
+        int x_box = sc.nextInt();
+        int y_box = sc.nextInt();
+        Position position_box = new Position(x_box, y_box);
+        
         System.out.println("Give the position of the goal");
         int x_goal = sc.nextInt();
         int y_goal = sc.nextInt();
         Position position_goal = new Position(x_goal, y_goal);
         
-        checkValid(n, m, x_player, y_player, x_goal, y_goal);
+        checkValidPosition(n, m, position_player);
+        checkValidPosition(n, m, position_box);
+        checkValidPosition(n, m, position_goal);
         State state = new State(n, m, position_player, position_goal);
     }
     
     
-    public static void checkValid(int n, int m, int x_player, int y_player, int x_goal, int y_goal){
-        if(x_player >= n || y_player >= m){
-            System.out.print("Player position invalid");
-            exit(0);
-        }
-        if(x_goal >= n || y_goal >= m){
-            System.out.print("Goal position invalid");
+    public static void checkValidPosition(int n, int m, Position pos){
+        if( pos.getX() >= n || pos.getY() >= m){
+            System.out.print("Position "+pos.toString()+" invalid");
             exit(0);
         }
     }

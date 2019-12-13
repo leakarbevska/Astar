@@ -78,7 +78,6 @@ public class Astar {
                 // donc l’équation calcule les mouvements minimums qu’il peut effectuer pour atteindre la fin 
                 
                 child.setF(child.getG() + child.getH());
-
             }
            }
         }
@@ -90,14 +89,14 @@ public class Astar {
         Position end = null;
         for(int i = 0; i <= state.getSize()[0]; i++){ //on cherche la position final
             for(int j = 0; j <= state.getSize()[1]; j++){
-                if(state.getMatrix()[i][j] == State.GOAL){// CHECK
+                if(state.getMatrix()[i][j].equals(State.GOAL)){// CHECK
                     end = new Position(i,j); //on prend la première position du but
                     break;
                 }
             }
         }
         
-        start = state.getPositionGoal(); //on prend la première position de la premiere boite 
+        start = state.getPositionGoal(); //on prend la position du depart de la boite 
         
         ArrayList<Position> pathBox =  getPath(state, start, end);
         ArrayList<Position> pathPlayer = null;
